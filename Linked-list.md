@@ -1,4 +1,4 @@
-Hard
+# (Hard) 23. Merge k Sorted Lists
 ## Solution 1:    
 Staright Forward, loop through all the elements storing in an array. Then turn the array into a linked list.   
 O(nlgn)   
@@ -152,3 +152,49 @@ public ListNode mergeKLists(ListNode[] lists) {
     return lists[0];
 }
 ```
+# (Medium) 24. Swap Nodes in Pairs
+* Given a linked list, swap every two adjacent nodes and return its head.
+* You may not modify the values in the list's nodes, only nodes itself may be changed.
+* Swapping the pointers of two ListNode
+    
+* Iteration
+```Java
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode point = dummy; //相当于一个pointer
+        while(point.next != null && point.next.next != null){
+            swap1 = point.next;
+            swap2 = point.next.next;
+            point.next = point.next.next;
+            swap2.next = swap1;
+            swap1.next = swap2.next;
+        }
+        return dummy.next;
+    }
+}
+```
+* Recursion(永远不会)
+head 和head.next最后交换位置
+```Java
+public ListNode swapPairs(ListNode head) {
+    if ((head == null)||(head.next == null))
+        return head;
+    ListNode n = head.next;
+    head.next = swapPairs(head.next.next);
+    n.next = head;
+    return n;
+}
+```
+
+# (Hard)25. Reverse Nodes in k-Group
+
