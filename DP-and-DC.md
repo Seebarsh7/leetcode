@@ -165,3 +165,117 @@ public int longestValidParenthese(String s){
     return maxans;
 }
 ```
+# (Medium) 33. 丢失
+# (Medium) 34. Find First and Last Position of Element in Sorted Array
+* 单边二分
+* 左右开弓
+```Java
+public int[] searchRange(int[] nums, int target) {
+    int start = 0;
+    int end = nums.length()-1;
+    int[] ans = {-1, -1};
+    if(nums.length() == 0) return ans;
+    
+    while(start <= end){
+        mid = (start + end)/2;
+        if(nums[mid] == target){
+            int n = mid > 0? nums[mid-1]:Integer.MIN_VALUE;
+            if(n < target || mid == 0){
+                ans[0] = mid;
+                break;
+            }
+            end = mid - 1;
+        }
+        if(nums[mid] > target) end = mid - 1;
+        if(nums[mid] < target) start = mid + 1;
+        
+    }//while
+    
+    //左边有，右边肯定也有
+    start = 0;
+    end = nums.length() - 1;
+    
+    while(start <= end){
+        mid = (start + end)/2;
+        if(nums[mid] == target){
+            int n = mid > 0? nums[mid+1]:Integer.MAX_VALUE;
+            if(n > target || mid == nums.length()-1){
+                ans[1] = mid;
+                break;
+            }
+            start = mid + 1;
+        }
+        if(nums[mid] > target) end = mid - 1;
+        if(nums[mid] < target) start = mid + 1;
+    }
+    return ans;
+}
+```
+
+# (Easy) 35. Search Insert Position
+这道题比较简单，在二分查找的基础上，只要想清楚返回啥就够了。想的话，就考虑最简单的情况如果数组只剩下 2 5，target 是 1, 3, 6 的时候，此时我们应该返回什么就行。
+* 二分法start<= end的话start更新mid+1, end更新mid -1.
+* 二分法start< end的话，start更新mid+1， end更新mid
+```Java
+public int searchInsert(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length()-1;
+        if(nums.length() == 0) return 0;
+        
+        while(start < end){
+            mid = (start + end)/2;
+            if(target == nums[mid]) return mid;
+            else if(target < nums[mid]) end = mid;
+            else(target > nums[mid]) start = mid + 1;
+        }
+        if(target > nums[start]) return start + 1;
+        else if(target < nums[end]) return start;
+}
+```
+* 如何省略末尾的if判断
+    * 用start <= end; 这样如果start = end的时候能多做一次判断，如果target < nums\[mid\]的话，end更新而start不变，return的值是start，else，start更新为mid+1
+    * end = num.length(), 而非nums.length()-1，这样取mid的时候取到右端点。这样就可以放心return start了。
+```Java
+public int searchInsert(int[] nums, int target) {
+    int start = 0;
+    int end = nums.length - 1;
+    if (nums.length == 0) {
+        return 0;
+    }
+    while (start <= end) {
+        int mid = (start + end) / 2;
+        if (target == nums[mid]) {
+            return mid;
+        } else if (target < nums[mid]) {
+            end = mid - 1;
+        } else {
+            start = mid + 1;
+        }
+    }
+
+    return start;
+
+}
+```
+```Java
+public int searchInsert(int[] nums, int target) {
+    int start = 0;
+    int end = nums.length;
+    if (nums.length == 0) {
+        return 0;
+    }
+    while (start < end) {
+        int mid = (start + end) / 2;
+        if (target == nums[mid]) {
+            return mid;
+        } else if (target < nums[mid]) {
+            end = mid;
+        } else {
+            start = mid + 1;
+        }
+    }
+
+    return start;
+
+}
+```
