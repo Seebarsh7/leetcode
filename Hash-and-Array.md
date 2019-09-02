@@ -154,3 +154,91 @@ public void nextPermutation(int[] nums) {
     reverse(nums, i+1);
 }
 ```
+# (Medium) 36. Valid Sudoku
+Determine if a 9x9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+* Each row must contain the digits 1-9 without repetition.
+* Each column must contain the digits 1-9 without repetition.
+* Each of the 9 3x3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+遍历也只需要O(n), 3遍是3n，空间只要O(1)    
+Use HashSet 规定格式:
+ * 如果第 4 列有一个数字 8，我们就 (8)4，把 "(8)4"放进去。
+ * 如果第 5 行有一个数字 6，我们就 5(6)，把 "5(6)"放进去。
+ * 小棋盘看成一个整体，总共是 9 个，3 行 3 列，如果第 2 行第 1 列的小棋盘里有个数字 3，我们就把 "2(3)1" 放进去。
+The Java.util.HashSet.add() method in Java HashSet is used to add a specific element into a HashSet. This method will add the element only if the specified element is not present in the HashSet else the function will return False if the element is already present in the HashSet.   
+
+* Syntax: Hash_Set.add(Object element)
+* Parameters: The parameter element is of the type HashSet and refers to the element to be added to the Set.
+* Return Value: The function returns True if the element is not present in the HashSet otherwise False if the element is already present in the HashSet.
+```Java
+public boolean isValidSudoku(char[][] board) {
+        Set seen = new HashSet();
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                char number = board[i][j];
+                if(number != '.'){
+                    if(!seen.add(number + 'in row ' + i) || 
+                    !seen.add(number + ' in col ' + j) ||
+                    !seen.add(number + ' in block' + i/3 + '-' + j/3)){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+}
+```
+
+# (Hard) 37. Sudoku Solver
+经典回溯法：从上到下，从左到右遍历每个空位置。在第一个位置，随便填一个可以填的数字，再在第二个位置填一个可以填的数字，一直执行下去直到最后一个位置。期间如果出现没有数字可以填的话，就回退到上一个位置，换一下数字，再向后进行下去。
+* helper function: isValid, 这个位置上填这个数行不行？
+```Java
+private boolean isValid(int row, int col, char[][] board, char c) {
+    for(int i = 0; i < 9; i++){
+        if(board[row][i] == c){
+            return false;
+        }
+    }
+    for(int i = 0; i < 9; i++){
+        if(board[col][i] == c) return false;
+    }
+    
+    int start_row = row/3 * 3;
+    int start_col = col/3 * 3;
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            return !(board[start_row+i][start_col+j] == c);
+        }
+    }
+    return true;
+}
+```
+主要：
+```Java
+public void solveSudoku(char[][] board) {
+    solver(board);        
+}
+
+private boolean solver(char[][] board) {
+    for(int i = 0; i < 9; i++){
+        for(int j = 0; j <9){
+            if(board[i][j] == '.'){
+                char count == '1';
+                while(count < 9){
+                 if(isValid(i,j, board, count)){
+                     board[i][j] = count;
+                     if(solver(board)){
+                         return true;
+                     }else{
+                         board[i][j] = '.';
+                     }
+                 }
+                 count ++;
+                }
+                return false;
+             }
+        }
+    }
+    return true;
+}
+```
