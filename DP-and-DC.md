@@ -279,3 +279,64 @@ public int searchInsert(int[] nums, int target) {
 
 }
 ```
+# (Medium) 39. Combination Sum
+* backtracking(回溯): 一般的架构就是一个大的 for 循环，然后先 add，接着利用递归进行向前遍历，然后再 remove ，继续循环。
+```Java
+public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    List<List<Integer>> res = new ArrayList<>();
+    backtrack(res, new ArrayList<>, candidates, target, 0);
+}
+
+public void backtrack(List<List<Integer>> res, List<Integer> tempList, int[] candidates, int remain, int start){
+    if(remain < 0) return;
+    else if(remain == 0) res.add(new ArrayList<>(tempList));
+    else{
+        for(int i = start; i < candidates.length;i++){
+            tempList.add(candidates[i]);
+            backtrack(res, tempList, nums, remain - nums[i], i);
+            //if the remain <0 or find a solution;
+            tempList.remove(tempList.size()-1);
+        }
+    }
+}
+```
+* dynammic programming (like knapsack problem with repetition) 
+![dp](https://windliang.oss-cn-beijing.aliyuncs.com/39_1.jpg)
+```Java
+public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    List<List<List<Integer>>> res = new ArrayList<>();
+    Array.sort(candidates);
+    if(target < candidates[0]) return new ArrayList<Integer<Integer>>();
+    
+    for(int i = 0; i <= target; i++){
+        List<List<Integer>> ans_i = new ArrayList<>();
+        ans.add(i, ans_i);
+    }
+    
+    for(int i = 0; i < candidates.length; i++){
+        for(int sum = candidates[i]; sum <= target; sum++){
+            List<List<Integer>> ans_sum = ans.get(sum);
+            List<List<Integer>> ans_sub = ans.get(sum-candidates[i]);
+        }
+        //初始情况
+        if(sum == candiates[i]){
+            ArrayList<Integer> temp = new ArrayList<Integer>(); //这边的新建
+            temp.add(nums[i]);
+            ans_sum.add(temp);
+        }
+        if(ans_sub.size()>0){
+            for(int j = 0; j < ans_sub.size(); j++){
+                ArrayList<Integer> temp = new ArrayList<Integer>(ans_sub.get(j));
+                temp.add(nums[i]);
+                ans_sum.add(temp);
+            }
+        }
+    }
+    return ans.get(target);
+}
+```
+
+# (Medium) 40. Combination Sum II 
+* backtracking
+* this is the knapsack without repetition.
+* 也有人用DFS...
