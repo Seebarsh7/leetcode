@@ -242,3 +242,72 @@ private boolean solver(char[][] board) {
     return true;
 }
 ```
+# 41. (Hard) First Missing Positive
+Time O(n), Space O(1)     
+对于这种要求空间复杂度的，我们可以先考虑如果有一个等大的空间，我们可以怎么做。然后再考虑如果直接用原数组怎么做，主要是要保证数组的信息不要丢失。目前遇到的，主要有两种方法就是交换和取相反数。
+* Swap: this is really smart
+```Java
+public int firstMissingPositive(int[] nums) {
+    int n = nums.length; //之前都写错了，这里length不是function的
+    for(int i = 0; i < n; i++){
+        while(nums[i] > 0 && nums[i] < n && nums[i] != nums[nums[i] -1]){
+            swap(nums, i, nums[i] - 1);
+        }
+    }
+    for(int i = 0; i < n; i ++){
+        if(nums[i]!= i+1){
+            return i+1;
+        } 
+    }
+    return n+1;
+}
+
+//helper function swap, move j to i position
+public void swap(int[] nums, i, j){
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+```
+* 时间复杂度：for 循环里边套了个 while 循环，如果粗略的讲，那时间复杂度就是 O（n²）了。我们再从算法的逻辑上分析一下。因为每交换一次，就有一个数字放到了应该在的位置，只有 n 个数字，所以 while 里边的交换函数，最多执行 n 次。所以时间复杂度更精确的说，应该是 O（n）。
+
+* 标记: true and false
+ * 考虑到我们真正关心的只有正数。开始 a 数组的初始化是 false，所以我们把正数当做 false，负数当成 true。如果我们想要把 nums [ i ] 赋值成 true，如果 nums [ i ] 是正数，我们直接取相反数作为标记就行，如果是负数就不用管了。这样做的好处就是，遍历数字的时候，我们只需要取绝对值，就是原来的数了。
+ * 当然这样又带来一个问题，我们取绝对值的话，之前的负数该怎么办？一取绝对值的话，就会造成干扰。简单粗暴些，我们把正数都放在前边，我们只考虑正数。负数和 0 就丢到最后，遍历的时候不去遍历就可以了。
+```Java
+public int positiveNumbers(int[] nums){
+    int p = 0;
+    for(int i = 0; i <nums.length; i++){
+        if(nums[i] > 0){
+            swap(nums, i, p);
+            p++;
+        }
+    }
+    return p;
+}
+
+public void swap(int[] nums, int i, int j){
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+
+public int firstMissingPositive(int[] nums) {
+    int k = positiveNumbers(nums);
+    for(int i = 0; i < k; i++){
+        int index = Math.abs(nums[i]) - 1;
+        if(index < k){
+            if(nums[index] > 0){
+                nums[index] = (-1)*nums[index];
+            }
+        }
+    }
+    
+    for(int i = 0; i < nums.length; i++){
+        if(nums[i] > 0) return i+1;
+    }
+    return k+1;
+}
+```
+
+# (Hard) 42. Trapping Rain Water
