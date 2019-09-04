@@ -340,3 +340,85 @@ public List<List<Integer>> combinationSum(int[] candidates, int target) {
 * backtracking
 * this is the knapsack without repetition.
 * 也有人用DFS...
+
+# (Hard) 42. Trapping Rain Water
+* Use dynammic programming to find maxLeft and maxRight. O(n) and space is O(n)
+* Use two pointers to save space, O(1)
+* Use stack   
+![illus](https://windliang.oss-cn-beijing.aliyuncs.com/42_10.jpg)   
+```Java
+//DP
+public int trap(int[] height) {
+    int sum = 0;
+    int[] maxLeft = new int[height.length];
+    int[] maxRight = new int[height.length];
+    for(int i = 0; i < height.length; i++){
+        maxLeft[i] = Math.max(maxLeft[i-1], height[i]);
+    }
+    
+    for(int i = height.length-2; i >= 0; i--){
+        maxRight[i] = Math.max(maxRight[i+1], height[i]);
+    }
+    
+    for(int i = 0; i < height.length; i++){
+        int min = Math.min(maxLeft[i], maxRight[i]);
+        if(min < height[i]){
+            sum = sum + (min - height[i]);
+        }
+    }
+    return sum;
+}
+```
+     
+then how to use two pointers? constant space.
+```Java
+public int trap(int[] height) {
+    int left = 1;
+    int right = height.length -2;
+    int maxLeft = 0;
+    int maxRight = 0;
+    int sum = 0;
+    for(int i = 0; i < height.length; i++){
+        if(heigh[left-1] < height[right+1]){
+        //then left must be smaller than right
+            maxLeft = Math.min(height[i], maxLeft);
+            if(height[i] < maxLeft){
+                sum = sum + (maxLeft - height[i]);
+            }
+            left++;
+        }else{
+            maxRight = Math.min(height[i], maxRight);
+            if(height[i] < maxRight){
+                sum = sum + (maxRight - height[i]);
+            }
+            right--;
+        }
+    }
+    return sum;
+}
+```
+      
+Use stack, this is tricky!
+```Java
+public int trap6(int[] height) {
+    int sum = 0;
+    Stack<Integer> stack = new Stack<>();
+    int current = 0;
+    while(current < height.length){
+        while (!stack.empty() && height[current] > height[stack.peek()]) {
+            int h = height[stack.peek()];
+            stack.pop();
+            if(stack.empty()) break;
+            int distance = current - stack.peek() - 1;
+            int min = Math.min(height[stack.peek()], height[current]); //pop之后
+            sum = distance * (min - h);
+        }
+        stack.push(current);
+        current++;
+    }
+    return sum;
+}
+        
+    }
+}
+```
