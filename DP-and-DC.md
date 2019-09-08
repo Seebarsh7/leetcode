@@ -422,3 +422,113 @@ public int trap6(int[] height) {
     }
 }
 ```
+
+# (Hard) 44. Wildcard
+### 类似第十题，下面回忆一下第十题。    
+* Recursion:   
+    *  假定我们已经解决了问题，并且有了解决这个问题的函数。
+    * 如何将问题从 n 的规模降到 n - 1 的规模。
+    * 递归的出口是什么，也就是当问题规模已经降到最小的时候，我们如何解决它。
+```Java
+public boolean isMatch(String text, String pattern) {
+    if (pattern.isEmpty()) return text.isEmpty();
+    
+    boolean first_match = (!text.isEmpty() && (text.charAt[0] == pattern.charAt[0] || text.charAt[0] == '.'));
+    if(pattern.length >= 2 && pattern.charAt[1] == '*'){
+        return ((isMatch(text, pattern.subString(2))) || (first_match && isMatch(text.subString(1), pattern)));
+    }else{
+        return(first_match && isMatch(test.subString(1), pattern.subString(1)));
+    }
+}
+
+* DP
+    * OPT[i][j] indicate the matching between text[i...] with pattern[j...]
+```Java
+public boolean isMatch(String text, String pattern) {
+    // 多一维的空间，因为求 dp[len - 1][j] 的时候需要知道 dp[len][j] 的情况，
+    // 多一维的话，就可以把 对 dp[len - 1][j] 也写进循环了
+    boolean[][] dp = new boolean[text.length() + 1][pattern.length() + 1];
+    // dp[len][len] 代表两个空串是否匹配了，"" 和 "" ，当然是 true 了。
+    dp[text.length()][pattern.length()] = true;
+
+    // 从 len 开始减少
+    for (int i = text.length(); i >= 0; i--) {
+        for (int j = pattern.length(); j >= 0; j--) {
+            // dp[text.length()][pattern.length()] 已经进行了初始化
+            if(i==text.length()&&j==pattern.length()) continue;
+
+            boolean first_match = (i < text.length() && j < pattern.length()
+                                   && (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+            if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+                dp[i][j] = dp[i][j + 2] || first_match && dp[i + 1][j];
+            } else {
+                dp[i][j] = first_match && dp[i + 1][j + 1];
+            }
+        }
+    }
+    return dp[0][0];
+}
+
+```
+* 优化空间，只需要知道i和i+1, 因此只需要申请OPT[2][pattern.length()+1]。两组数组轮换存储。
+```Java
+ public boolean isMatch(String text, String pattern) {
+        // 多一维的空间，因为求 dp[len - 1][j] 的时候需要知道 dp[len][j] 的情况，
+        // 多一维的话，就可以把 对 dp[len - 1][j] 也写进循环了
+        boolean[][] dp = new boolean[2][pattern.length() + 1]; 
+        dp[text.length()%2][pattern.length()] = true;
+
+        // 从 len 开始减少
+        for (int i = text.length(); i >= 0; i--) {
+            for (int j = pattern.length(); j >= 0; j--) {
+                if(i==text.length()&&j==pattern.length()) continue;
+                boolean first_match = (i < text.length() && j < pattern.length()
+                        && (pattern.charAt(j) == text.charAt(i) || pattern.charAt(j) == '.'));
+                if (j + 1 < pattern.length() && pattern.charAt(j + 1) == '*') {
+                    dp[i%2][j] = dp[i%2][j + 2] || first_match && dp[(i + 1)%2][j];
+                } else {
+                    dp[i%2][j] = first_match && dp[(i + 1)%2][j + 1];
+                }
+            }
+        }
+        return dp[0][0];
+    }
+```
+### 本题是wildcard，和第十题\*的含义有所不同。
+字符串匹配，? 匹配单个任意字符，* 匹配任意长度字符串，包括空串。     
+* DP
+```Java
+不想填坑
+```
+* 迭代, 我觉得有点不好理解，看这里： https://leetcode.wang/leetCode-44-Wildcard-Matching.html
+```Java
+boolean isMatch(String str, String pattern) {
+    int s = 0, p =0, starIdx = -1, match = 0;
+    while(s < str.length()){
+        if(p < pattern.length() && str.charAt(s) == pattern.charAt(p) || pattern.charAt(p) == '?'){
+            p++;
+            s++;
+        }
+        else if(p < pattern.length() && pattern.charAt(p) == "*"){
+            starIdx = p;
+            match = s;
+            s++;
+        }
+        //用*匹配了一个字符
+        else if(starIdx != -1){
+            p = starIdx + 1;
+            s = match + 1;
+            match += 1;
+        }
+        else return false;
+    }
+    
+    while(p<pattern.length() && pattern.charAt(p) == '*'){
+        p++;
+        
+    }
+    return p==pattern.length();
+}
+```
+
+# （Hard）45. Jump Game 2
