@@ -723,3 +723,17 @@ A solution set is:
   [5]
 ]
 ```
+
+# 53. (Easy) Maximum Subarray
+* dynammic programming的话OPT[i] = 包括nums[i]的数组中的最大。OPT = max{nums[i], OPT[i-1]+nums[i]
+```Java
+public int maxSubArray(int[] nums) {
+    int dp = nums[0];
+    int max = nums[0];
+    for(int i = 0; i < nums.length();i++){
+        max = Math.max(nums[i], nums[i] + dp);
+    }
+    return max;
+}
+```
+
