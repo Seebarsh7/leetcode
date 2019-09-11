@@ -311,3 +311,81 @@ public int firstMissingPositive(int[] nums) {
 ```
 
 # (Hard) 42. Trapping Rain Water
+
+# (Medium) 50. Group Anagrams
+* Using Hash Table
+```Java
+public List<List<String>> groupAnagrams(String[] strs) {
+    List<List<String>> ans = new ArrayList<>();
+    boolean[] used = new boolean[str.length];
+    for(int i = 0; i < str.length; i++){
+        List<String> temp = null;
+        if(!used[i]){
+            List<String> temp = new ArrayList<>();
+            temp.add(str[i]);
+            for(int j = i+1; j < strs.length(); j++){
+                if(eqauls(strs[i], strs[j])){
+                    temp.add(strs[j]);
+                    used[j]= true;
+                }
+            }
+        }
+        if(temp != NULL){
+            ans.add(temp);
+        }
+    }
+    return ans;
+}
+```
+Helper function equals
+```Java
+public boolean equlas(String str1, String str2){
+    Map<Character, Integer> hash = new HashMap<>();
+    for(int i = 0; i < str1.length(); i++){
+        if(hash.containsKey(str1.charAt(i))) 
+             hash.put(str1.charAt[i], hash.get(str1.charAt[i])+1);
+        else
+             hash.put(str1.charAt[i], 1);
+    }
+    
+    for(int i = 0; i < str2.length(); i++){
+        if(hash.containsKey(str2.charAt(i))) 
+             hash.put(str1.charAt[i], hash.get(str1.charAt[i])+1);
+        else
+             return false;
+    }
+    
+    Set<Character> set = hash.keySet();
+    for(char c: set){
+        if(hash.get(c) != 0) return false;
+    }
+    
+    return true;
+}
+```
+* 解法二： 对string排序之后再比较
+* 解法三： 太牛逼， 算数基本定理，映射到质数
+这个解法时间复杂度，较解法二有提升，但是有一定的局限性，因为求 key 的时候用的是累乘，可能会造成溢出，超出 int 所能表示的数字。 
+```Java
+public List<List<String>> groupAnagrams(String[] strs) {
+     HashMap<Integer, List<String>> hash = new HashMap<>();
+     int[] prime = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103};
+     for(int i = 0; i < strs.length(); i++){
+         int key = 1; 
+         for(int j = 0; j < strs[i].length(); j++){
+              key*= prime[strs[i].charAt[j] - 'a'];
+         }
+         
+         if(hash.containsKey(key)) hash.get(key).add(str[i]);
+         else{
+             <List<String> temp = new ArrayList<>();
+             temp.add(strs[i]);
+             hash.put(ket, temp);
+         }    
+     }
+     return new ArrayList<List<String>>(hash.values());
+ }
+ ```
+ * 第四种解法想法和三差不多，只不过key的话换了个办法，用“#0#0#0”这种格式来做key，0是用来count各个字母出现次数的
+ 
+ # （Hard） N-Queen
