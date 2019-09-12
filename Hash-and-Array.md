@@ -388,4 +388,62 @@ public List<List<String>> groupAnagrams(String[] strs) {
  ```
  * 第四种解法想法和三差不多，只不过key的话换了个办法，用“#0#0#0”这种格式来做key，0是用来count各个字母出现次数的
  
- # （Hard） N-Queen
+# （Hard） N-Queen
+
+# (Medium) 54. Spiral Matrix
+```Java
+public List<Integer> spiralOrder(int[][] matrix) {
+    List<Integer> ans = new ArrayList<>();
+    if(matrix.length == 0) return ans;
+    int start_x = 0;
+    int start_y = 0;
+    int direction = 0; //0:右， 1：下，2：左， 3： 上
+    int top_border = -1,  //上边界
+    right_border = matrix[0].length,  //右边界
+    bottom_border = matrix.length, //下边界
+    left_border = -1; //左边界
+    //注意这个-1
+    while(true){
+        if(ans.size() == matrix.length() * matrix[0].length){
+            return ans;
+        }
+        ans.add(matrix[start_y][start_x]);
+        switch(direction){
+            case 0:
+                if(start_x + 1 == right_border){
+                    direction = 1;
+                    top_border += 1;
+                    start_y += 1;
+                }else{
+                     start_x += 1;
+                }
+            case 1:
+                if(start_y + 1 == bottom_border){
+                    direction = 2;
+                    right_border -= 1;
+                    start_x += 1;
+                }else{
+                     start_y += 1;
+                }
+            case 2:
+                if(start_x - 1 == left_border){
+                    direction = 3;
+                    bottom_border -= 1;
+                    start_y -= 1;
+                }else{
+                     start_x -= 1;
+                }
+            case 3:
+                if(start_y - 1 == top_border){
+                    direction = 0;
+                    left_border += 1;
+                    start_x += 1;
+                }else{
+                     start_y -= 1;
+                }
+        }
+    }
+    return ans;
+    
+}
+```
