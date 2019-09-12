@@ -25,3 +25,77 @@ public List<Interval> merge(List<Interval> intervals) {
     }
 }
 ```
+# 116. 117. Populating Next Right Pointers in Each Node 
+今天再来俩graph的题就可以告老还梦乡了。   
+* 116 is a perfect binary tree
+来吧让我们搞个BFS, 
+### 101. Symmetric Tree
+tree structure   
+```Java
+public class TreeNode {
+     int val;
+     TreeNode left;
+     TreeNode right;
+     TreeNode(int x) { val = x; }
+ }
+```
+```Java
+public boolean isSymmetric(TreeNode root) {
+    if(root == NULL) return true;
+    Queue<TreeNode> leftTree = new LinkedList<>();
+    Queue<TreeNode> rightTree = new LinkedList<>();
+    
+    leftTree.offer(root.left);
+    rightTree.offer(root.right);
+    while(!leftTree.isEmpty() && !rightTree.isEmpty()){
+        TreeNode cur_left = leftTree.poll();
+        TreeNode cur_right = rightTree.poll();
+        if (curLeft == null && curRight != null || curLeft != null && curRight == null) {
+            return false;
+        }
+        if (curLeft != null && curRight != null) {
+            if (curLeft.val != curRight.val) {
+                return false;
+            }
+            leftTree.offer(cur_left.left);
+            leftTree.offer(cur_right.left);
+            rightTree.offer(cur_right.right);
+            rightTree.offer(cur_left.right);
+         }
+    }
+    if (!leftTree.isEmpty() || !rightTree.isEmpty()) {
+        return false;
+    }
+    return true;
+    
+}
+```
+### 102. Binary Tree Level Order Traversal
+```Java
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> ans = new ArrayList<>();
+    if(root == NULL) return ans;
+    Queue<TreeNode> treeNode = new LinkedList<>();
+    Queue<TreeNode> levelNode = new LinkedList<>();
+    treeNode.offer(root);
+    int level = 0;
+    nodeLevel.offer(level);
+    while(!treeNode.isEmpty()){
+        int curLevel = nodeLevel.poll();
+        TreeNode curNode = treeNode.poll();
+        if (curNode != null) {
+            if(ans.size() < curLevel){
+                ans.add(new ArrayList<Integer>());
+            }
+            ans.get(curLevel).add(curNode.val);
+            level = curLevel + 1;//很关键！
+            treeNode.offer(curNode.left);
+            nodeLevel.offer(level);
+            treeNode.offer(curNode.right);
+            nodeLevel.offer(level);
+        }
+        
+    }
+    return ans;
+}
+```
