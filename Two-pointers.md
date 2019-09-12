@@ -71,3 +71,36 @@ public int strStr(String haystack, String needle) {
     }        
 }
 ```
+
+# (Hard) 76. Minimum Window Substring
+Sliding window的应用
+```Java
+public String minWindow(String s, String t) {
+     int[] map = new int[128]; //why 128呢。。ASCII表一共128个
+     for(int i =0; i < t.length; i++){
+        map[t.charAt(i)] += 1;
+     }
+     int left = 0, right = 0;
+     int ans_left = 0, ans_right = -1; //最后返回是用ans_right+1为了找不到时返回“”，这里先设为-1
+     int ans_len = Integer.MAX_VALUE();
+     int count = t.length();
+     while(right < s.length()){
+        map[s.charAt(right)] --；
+        if(map[s.charAt(right)] >= 0) count --;
+        while(count == 0){
+            int temp_len = right - left + 1;
+            if(temp_len < ans_len){
+                ans_left = left;
+                ans_right = right;
+                ans_len = temp_len;
+            }
+            map[s.charAt(left)] ++;
+            if(map[s.charAt(left)] > 0) count ++;
+            left++;
+        }
+        right++;
+     }
+     return s.subString(ans_left, ans_right+1);
+}
+```
+还挺好理解的   
