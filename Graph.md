@@ -99,3 +99,76 @@ public List<List<Integer>> levelOrder(TreeNode root) {
     return ans;
 }
 ```
+
+### 116. （Medium）Populating Next Right Pointers in Each Node
+```Java
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val,Node _left,Node _right,Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+class Solution {
+    public Node connect(Node root) {
+        if(root = null) return root;
+        Queue<Node> queue = new LinkedList<Node>();
+        queue.offer(root);
+        Node pre = null;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i = 0; i < size; i++){
+                Node cur = queue.poll();
+                if(i > 0){
+                    pre.next = cur;
+                }
+                pre = cur;
+                if(cur.left != null) queue.offer(cur.left);
+                if(cur.right != null) queue.offer(cur.right);
+            }
+            
+            
+        }
+        return root;
+        
+    }
+}
+```
+If want to use constant space:
+```Java
+public Node connect(Node root) {
+    if(root = null) return null;
+    Node start = root;
+    Node prev = root;
+    Node cur = null;
+    while(start.left != null){
+        if(cur == null){
+            prev.left.next = prev.right;
+            prev = start.left;
+            cur = start.right;
+            start = prev;
+        }
+        else{
+            prev.left.next = prev.right;
+            prev.right.next = cur.left;
+            prev = prev.next;
+            cur = cur.next;
+        }
+        
+    }
+    return root;
+}
+```
+
+### 117可以用116的BFS解决
