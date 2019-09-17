@@ -171,4 +171,108 @@ public Node connect(Node root) {
 }
 ```
 
-### 117可以用116的BFS解决
+### 117可以用116的BFS思想解决
+![](https://windliang.oss-cn-beijing.aliyuncs.com/117_3.jpg)
+```Java
+public Node connect(Node root) {
+    Node cur = root;
+    Node dummy = new Node();
+    while(cur!=null){
+        (Node tail = dummy).next = null;
+        if(cur.left!=null){
+            tail.next = cur.left;
+            tail = tail.next;
+        }
+        if(cur.right!=null){
+            tail.next = cur.right;
+            tail = tail.next;
+        }
+        cur = cur.next;
+    }
+    return root;
+}
+```
+
+# 124. Binary Tree Maximum Path
+* B-Tree： Recursion
+全局变量+Recursion
+```Java
+
+```
+### 104. (Easy) Binary Tree Max Depth
+* DFS in a recursive manner
+```Java
+public int maxDepth(TreeNode root) {
+    if(root = null) return 0;
+    return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+}
+```
+* BFS
+```Java
+public int maxDepth(TreeNode root) {
+   和103相似， while里套for 
+}
+```
+#### 102. Binary Tree Level Traverse
+```
+DFS一般都是递归做的
+```
+```Java
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> ans = new ArrayList<>();
+    DFS(ans, root, 0);
+    return ans;
+}
+
+public void DFS(List<List<Integer>> ans, TreeNode root, int level){
+    if(root = null) return;
+    if(ans.size() <= level){ //root has level 0 but has 1 arraylist
+        ans.add(new ArrayList<Integer>());
+    }
+    ans.get(level).add(root.val);
+    DFS(ans, root.left, level+1);
+    DFS(ans, root.right, level+1);
+}
+```
+```
+BFS
+```
+
+```Java
+public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> ans = new ArrayList<>();
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while(!queue.isEmpty){
+       
+        List<Integer> sublist = new ArrayList<>();
+        for(int i = 0; i < queue.size(); i++){
+            TreeNode cur = queue.poll();
+            if(cur!= null){
+                sublist.add(cur.val);
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            }
+        }
+        if(sublist.size() > 0) ans.add(sublist);
+    }
+    return ans;
+
+}
+```
+
+#### 103. Zigzag
+* DFS/BFS modify from 102 is ok, just need to remember when adding to end, when adding to head
+```Java
+if ((level % 2) == 0) {
+        ans.get(level).add(root.val); //添加到末尾
+    } else {
+        ans.get(level).add(0, root.val); //添加到头部
+    }
+```
+* Using Stack, interesting because of Stack's Last in First out.
+
+
+### 106 
+
+### 110
