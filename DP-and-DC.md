@@ -737,3 +737,35 @@ public int maxSubArray(int[] nums) {
 }
 ```
 
+# (Hard) 128. Longest Consecutive Sequence
+* 其实personally觉得不难，想到要用hash做了
+* 第一种是用hash Set，是否contains，然后从最小的序列开始（也就是说这个数组里没有n-1了，只有n）, 竟然觉得有点难想
+    * 趁机学一下hash set的语法
+    * contains, add, remove, isEmpty, int size
+* 第二种有点像DP，所以放在DP里，但有些不同的是，OPT是更新在边界的，像是从中间向两边的结构。
+```Java
+public int longestConsecutive(int[] nums) {
+    HashSet<Integer> set = new HashSet<>();
+    for(int i = 0; i < nums.length; i++){
+        set.add(nums[i]);
+    }
+    
+    int max = 0;
+    for(int i = 0; i < nums.length; i++){
+        int num = nums[i];
+        if(!set.contains(num-1)) {
+            int count = 0;
+            while(set.contains(num)){            
+                count++;
+                num++;
+            }
+            max = Math.max(max, count);
+        }
+    }
+}
+```
+```Java
+public int longestConsecutive(int[] nums) {
+    
+}
+```
