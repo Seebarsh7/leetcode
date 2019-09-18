@@ -196,8 +196,22 @@ public Node connect(Node root) {
 # 124. Binary Tree Maximum Path
 * B-Tree： Recursion
 全局变量+Recursion
-```Java
+* 看到一个post说，不断更新max为val+left+right. 但每次返回的时候只返回 root.val + max(left,right). 这个实在是太巧妙了。我操他妈的。
 
+```Java
+int max = Integer.MIN_VALUE;
+public int maxPathSum(TreeNode root) {
+    helper(root);
+    return max;
+}
+public int helper(TreeNode root){
+    if(root == null) return 0;
+    int left = Math.max(helper(root.left), 0);
+    int right = Math.max(helper(root.right), 0);
+    
+    max = Math.max(max, root.val+left+right);
+    return root.val+Math.max(left,right);
+}
 ```
 ### 104. (Easy) Binary Tree Max Depth
 * DFS in a recursive manner
@@ -272,7 +286,26 @@ if ((level % 2) == 0) {
 ```
 * Using Stack, interesting because of Stack's Last in First out.
 
+### (Medium)105. Construct Binary Tree from Preorder and Inorder Traversal 
+* preorder: root, left child，right child
+* in order: left child，root，right child
 
-### 106 
 
-### 110
+### 106 和105差不多我觉得有点难
+
+### (Easy)110. Balanced Binary Tree
+```Java
+public boolean isBalanced(TreeNode root) {
+    return getTreeDepth!= -1;
+}
+private int getTreeDepth(TreeNode root) {
+    if(root == null) return 0;
+    int left = getTreeDepth(root.left);
+    if(left == -1) return -1;
+    int right = getTreeDepth(root.right);
+    if(right == -1) return -1;
+    
+    if(Math.abs(left - right) > 1 ) return -1;
+    return Math.max(left, right);
+}
+```
