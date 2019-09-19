@@ -198,3 +198,55 @@ public ListNode swapPairs(ListNode head) {
 
 # (Hard)25. Reverse Nodes in k-Group
 
+# (Easy)155. Min-Stack 
+```
+push(x) -- Push element x onto stack.
+pop() -- Removes the element on top of the stack.
+top() -- Get the top element.
+getMin() -- Retrieve the minimum element in the stack.
+```
+* 这居然是个easy题，难在题目意思，没有想到要用Java自带的数据结构来做。
+* 其实就是keep track of the min, and keep other operations the same as Stack.
+* I think there are two problems:
+    * how to keep the old min value when pop the current min value
+    * how to keep track of the min value
+* There is a very smart idea to store the gap between current min value and the upcoming x.
+* Some trivial thing: using long as the data type, need cast
+```
+The problem for my solution is the cast. I have no idea to avoid the cast. Since the possible gap between the current value and the min value could be Integer.MAX_VALUE-Integer.MIN_VALUE;
+```
+```Java
+class MinStack {
+    long min;
+    Stack<Long> stack;
+    /** initialize your data structure here. */
+    public MinStack() {
+       stack = new Stack
+    }
+    
+    public void push(int x) {
+        if(stack.isEmpty){
+            stack.push(0L);
+        }else{
+            stack.push(x-min);
+            if(x<min) min = x;
+        }
+    }
+    //what is amazing is that pop keeps the same behaviour as stack, 
+    //but we need to keep track of the old min and current min
+    public void pop() {
+        if(stack.isEmpty) return;
+        long pop = stack.pop();
+        if(num < 0) min = min - pop; //(pop = x - min, min = x-pop, x is the current min)
+    }
+   
+    public int top() {
+        if(stack.peek()>0) return (int)(stack.peek() + min);
+        else return (int)min; //this is the second place that I feel amazed, this means that min is updated to x, to the current min.
+    }
+    
+    public int getMin() {
+        return (int)min;    
+    }
+}
+```
