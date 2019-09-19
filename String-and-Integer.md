@@ -168,3 +168,124 @@ public String multiply(String num1, String num2) {
 }
 ```
 
+# (Easy)157. Read N Characters Given Read4
+* 这道题真的太难懂了。。。
+
+how read4 works???
+```
+The API read4 reads 4 consecutive characters from the file, then writes those characters into the buffer array buf.   
+The return value is the number of actual characters read.    
+   
+File file("abcdefghijk"); // File is "abcdefghijk", initially file pointer (fp) points to 'a'
+char[] buf = new char[4]; // Create buffer with enough space to store characters
+read4(buf); // read4 returns 4. Now buf = "abcd", fp points to 'e'
+read4(buf); // read4 returns 4. Now buf = "efgh", fp points to 'i'
+read4(buf); // read4 returns 3. Now buf = "ijk", fp points to end of file
+```
+大概就是n是我要读的数字，比如leetcode我要利用read4读五个数，那真实读了的就是leetc，而abc若是我要用read4读4个数，我实际只能读到abc，所以实际读了3个。   
+
+```Java
+/**
+ * The read4 API is defined in the parent class Reader4.
+ *     int read4(char[] buf); 
+ */
+public class Solution extends Reader4 {
+    /**
+     * @param buf Destination buffer
+     * @param n   Number of characters to read
+     * @return    The number of actual characters read
+     */
+    public int read(char[] buf, int n) {
+        int total = 0;
+        boolean eof = false;
+        char[] tmp = new char[4];
+        //total < n 的意思是现在read4读的数还没有超过要求
+        while(!eof && total < n){
+             int count = read4(tmp); //count是目前read4的actual_read
+             eof = (count < 4);
+             count = Math.min(count, n-total);
+             for(int i = 0; i < count; i++){
+                    //first use and then ++
+                    buf[total] = tmp[i];
+                    total++;
+             }
+        }
+        return total;
+    }
+}
+```
+
+# (Hard)  158. Read N Characters Given Read4 II - Call multiple times
+* 这道题的难点在于题目。。。很难理解。但有大佬提出来说这个其实在各种hardware里是非常常见的数据读取
+* 这里我可以read很多次，看一个例子
+```
+File file("abc");
+Solution sol;
+// Assume buf is allocated and guaranteed to have enough space for storing all characters from the file.
+sol.read(buf, 1); // After calling your read method, buf should contain "a". We read a total of 1 character from the file, so return 1.
+sol.read(buf, 2); // Now buf should contain "bc". We read a total of 2 characters from the file, so return 2.
+sol.read(buf, 1); // We have reached the end of file, no more characters can be read. So return 0.
+```
+* 我认为我需要三个指针和一个temperory buffer
+     * ptr, 新数组我写到哪里了？是不是达到了题目中n的要求
+     * buffer pointer: 目前这个read4的结果我写到哪里了？如果写到了尽头，那么我就可以reset buffer pointer =0，然后读下一个read4了
+     * buffer counter： 目前这个buffer我的有效读取的字母有多少个？如果buffer pointer = buffer counter（也就是尽头）的话，我就可以把buffer pointer = 0了。
+```Java
+private int buffPointer = 0;
+private int buffCounter = 0;
+private char[] tmp = new char[4];
+public int read(char[] buf, int n) {
+     int ptr = 0;
+     while(ptr < n){
+          if(buffPointer == 0) buffCounter = read4(tmp);
+          while(buffPointer < buffCounter && ptr < n){
+               buf[ptr] = tmp[buffPointer];
+               ptr++;
+               buffPointer++;
+          }
+          if(buffPointer == buffCounter) buffPointer = 0;
+          if(buffCounter < 4) break;
+     }
+     return ptr;
+}
+```
+* Google follow up: how to save space without temp
+```
+Because using inner buffer(buf4) can introduce more memory copy operation, which is very time-consuming.
+
+We need to copy characters from the file directly when there is enough space in the buffer.
+
+When the buffer size is not enough, we first copy the 4B characters to inner buf4. Then we copy from buf4.
+
+buffer: |-- 4B --| -- 4B --| - tail -|. Tail segment may be smaller than 4B.
+```
+* Scene 1
+```
+  buf4: || empty
+buffer: |--- 4B ---|--- 4B ---|- tail -|
+  file: |--- 4B ---|--- 4B ---|--- 4B ---|--- 4B ---|---|
+```
+* 2
+```
+buf4: || empty
+buffer: |--- 4B ---|--- 4B ---|- tail -|
+  file: |--- 4B ---|--- 4B ---|--|
+  ```
+* Scenario 3:
+```
+            i4     n4
+  buf4: |--- 4B ---|
+buffer: |--- 4B ---|--- 4B ---|- tail -|
+  file: |--- 4B ---|--- 4B ---|--|
+```
+* Scenario 4:
+```
+            i4     n4
+  buf4: |--- 4B ---|
+buffer: |--- 4B ---|--- 4B ---|- tail -|
+  file: |--- 4B ---|--- 4B ---|--- 4B ---|--- 4B ---|---|
+```
+* The rule is
+
+     * whenever there is content in the buf4, copy from buf4
+     * whenever there is enough space in buffer, copy from file
