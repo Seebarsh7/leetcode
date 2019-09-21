@@ -289,3 +289,46 @@ buffer: |--- 4B ---|--- 4B ---|- tail -|
 
      * whenever there is content in the buf4, copy from buf4
      * whenever there is enough space in buffer, copy from file
+# 163. Missing Ranges
+* My solution is wrong with case
+[] lower = 1, upper = 1    
+should return "1" but my program returns []   
+* Therefore it is worth thinking how the problem is defined: the lower and upper could appear in the middle of the nums array
+* String could be printed as formatted
+```Java
+String getRange(int n1, int n2){
+     return (n1 == n2)?String.ValueOf(n1) : String.format("%d->%d", n1, n2);
+}
+```
+* only need a pointer next, kind of like what is the current lower bound that I need to print out?
+```Java
+     int next = lower;
+     for(int i = 0; i < nums.length; i++){
+          if(nums[i] < next) continue;
+          if(nums[i] == next){
+               next++;
+               continue;
+          }
+    
+          res.add(getRange(next, nums[i] - 1));
+          next = a[i] + 1; //the next lower bound
+               
+          }
+          //a final check
+           if(next <= upper) res.add(getRange(next, upper));
+           
+           return res;
+```
+* the idea is basically exchanging 2 pointers
+```Java
+int prev = lower - 1;
+for(int i = 0; i <= nums.length; i++){
+     int after = i ==nums.length? upper+1:nums[i];
+     if(prev+2 == after)
+          ans.add(String.ValueOf(prev+1));
+     else if(prev+2<after){
+          ans.add...
+     }
+     prev = after;
+}
+```
