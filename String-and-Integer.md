@@ -332,3 +332,15 @@ for(int i = 0; i <= nums.length; i++){
      prev = after;
 }
 ```
+# 205. Isomorphic Strings
+* 这是一道easy题。。。我的第一想法就是hashmap，使两个string一一对应
+* 万万没想到第一次test case倒在ab和aa上，因为a map a的时候，第二个b还是会默认是一个新的key，map a没有任何毛病
+* 于是我改了一下，让key不在map里的时候，寻找一下对应另一个string的character是否已经是key了
+* 造成了一个新错误就是baa和cfa，因为这个时候我的代码没办法可以f map a，但此时a并不是key
+* 所以重点就在于建立一个双向的map！！但又不能是一个一对一的关系，因为可能会产生多对一。。。
+* 所以我submit了四次。。。全部fail，看看别人怎么做的吧： 用一个256的int数组，instead of map
+     * if use HashMap, use containsValue: 
+     ```
+     The java.util.HashMap.containsValue() method is used to check whether a particular value is being mapped by a single or more than one key in the HashMap.
+```
+     
