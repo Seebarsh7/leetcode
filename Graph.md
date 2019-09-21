@@ -309,3 +309,30 @@ private int getTreeDepth(TreeNode root) {
     return Math.max(left, right);
 }
 ```
+# 200. Number of Islands
+* woc看懂之后拍案叫绝，why DFS？ 这就相当于一个四个方向的DFS，如果对应格子不是1的话就不走了，如果是1就把它改成0，然后在这个1的基础上继续向四周发散。
+* 如果继续不能前进了（周围都是0）就return
+* 回到主函数的for loop，这时候如果grid里还有1，那么就应该是island了。
+* 整体一个大的也叫一个island
+```Java
+public int numIslands(char[][] grid) {
+    int Y = grid.length;
+    int X = grid[0].length;
+    for(int i = 0; i < X; i++){
+        for(int j = 0; j < Y; j++){
+            if(grid[i][j] == 1){
+                DFS(grid, i, j);
+                count++;
+            }
+        }
+    }
+    public void DFS(char[][] grid, int i, int j){
+        if(i < 0 || j < 0 || i > X || j > Y || grid[i][j] != 1) return;
+        grid[i][j] = 0;
+        DFS(grid, i+1, j);
+        DFS(grid, i-1, j);
+        DFS(grid, i, j + 1);
+        DFS(grid, i, j - 1);
+    }
+}
+```
