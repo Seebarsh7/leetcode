@@ -250,3 +250,86 @@ class MinStack {
     }
 }
 ```
+# (Hard) 208. Implement Trie (Prefix Tree)
+https://leetcode.com/articles/implement-trie-prefix-tree/
+* Insert: Inserts a word into the trie.
+* Search: Returns if the word is in the trie.
+* Start with: Returns if there is any word in the trie that starts with the given prefix.
+从建一颗树入手
+```Java
+class TrieNode {
+    public boolean isWord;
+    public TrieNode[] children = new TrieNode[26];
+    public TrieNode(){}
+}
+class Trie {
+
+    /** Initialize your data structure here. */
+    public Trie() {
+        public TrieNode root;
+        public Trie(){
+            root = new TrieNode();
+        }
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        TrieNode ws = root;
+        for(int i = 0; i < word.length(); i++){
+            char c= word.charAt(i);
+            if(ws.children[c - 'a'] == null){
+                ws.children[c - 'a'] = new TrieNode();
+            }
+            ws = ws.children[c - 'a'];
+   
+        }
+        ws.isWord = true;
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        TrieNode ws = root;
+        for(int i = 0; i < word.length(); i++){
+            char c= word.charAt(i);
+            if(ws.children[c-'a'] == null) return false;
+            ws = ws.children[c - 'a'];
+        }
+        return ws.isWord; //the last node
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        rieNode ws = root;
+        for(int i = 0; i < prefix.length(); i++){
+            char c= word.charAt(i);
+            if(ws.children[c-'a'] == null) return false;
+            ws = ws.children[c - 'a'];
+        }
+        return true;
+    }
+}
+
+```
+
+# 211. Add and Search Word - Data structure design
+
+
+```Java
+class WordDictionary {
+
+    /** Initialize your data structure here. */
+    public WordDictionary() {
+        
+    }
+    
+    /** Adds a word into the data structure. */
+    public void addWord(String word) {
+        
+    }
+    
+    /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+    public boolean search(String word) {
+        
+    }
+}
+```
