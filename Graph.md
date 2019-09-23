@@ -336,3 +336,40 @@ public int numIslands(char[][] grid) {
     }
 }
 ```
+# 222. Count Complete Tree Nodes
+* 好的我花了半个小时然后发现自己看错题了，日
+* 第一反应是可以用BFS或者recursion做，再想一想感觉BFS可能不太合适
+* 今天感觉看答案之前先自己想想会比较好，除了一些从来没遇到过的，比如昨天的Trie 
+* 自从学了CS每天都还是乐呵乐呵的，这里还学到了位运算，左移×2，右移÷2
+* Given a complete binary tree, count the number of nodes.
+     
+* Explanation
+
+The height of a tree can be found by just going left. Let a single node tree have height 0. Find the height h of the whole tree. If the whole tree is empty, i.e., has height -1, there are 0 nodes.
+
+Otherwise check whether the height of the right subtree is just one less than that of the whole tree, meaning left and right subtree have the same height.
+    * If yes, then the last node on the last tree row is in the right subtree and the left subtree is a full tree of height h-1. So we take the 2^h-1 nodes of the left subtree plus the 1 root node plus recursively the number of nodes in the right subtree.
+    * If no, then the last node on the last tree row is in the left subtree and the right subtree is a full tree of height h-2. So we take the 2^(h-1)-1 nodes of the right subtree plus the 1 root node plus recursively the number of nodes in the left subtree.
+```Java
+public int height(TreeNode root){
+    return root.left == null? -1: height(root.left) + 1; //root的高度是0
+}
+    
+public int countNodes(TreeNode root) {
+    int h = height(root);
+    int nodes = 0;
+    while(root!= null){
+        if(height(root.right) == h-1){ //indicates that the left tree is complete
+            nodes += (1 << h);
+            root = root.right;
+        } 
+        else if(heigh(root.right) == h-2){ //indicates that right tree is complete
+            nodes = (1 << h-1);
+            root = root.left;
+        }
+        h--;
+    return nodes;
+}
+
+```
+
