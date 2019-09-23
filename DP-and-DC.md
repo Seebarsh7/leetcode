@@ -784,3 +784,29 @@ public int longestConsecutive(int[] nums) {
     return max;
 }
 ```
+# 221. Max Square
+* 今天来找我玩耍的人好多，一整天都不知道在干什么。。。
+* 这道题是一个一眼我能看出来的二维DP，无论从哪个角开始都可以，但我一开始的想法是OPT(i,j)直接存的是面积，高票答案们存的都是边长！！这非常巧妙了。
+* 还有一个就是，string是length(), 数组是string，非callable。
+* OPT(i,j)以i，j为右上顶点的
+```Java
+public int maximalSquare(char[][] matrix) {
+     if(matrix.length == 0 || matrix[0].length == 0 || a == null){
+        return 0;
+     } 
+     int row = matrix.length;
+     int col = matrix[0].length;
+     int max = 0;
+     
+     int[][] OPT = new int[row+1][col+1]; //多一行initial value, default都是0
+     for(int i = 0; i < row; i++){
+        for(int j = 0; j < col; j++){
+            if(matrix[i][j] == '1'){
+                OPT[i][j] = Math.min(OPT[i][j-1], OPT[i-1][j], OPT[i-1][j-1]) + 1;
+                max = Math.math(max, OPT[i][j]);
+            }
+        }
+     }
+     return max*max;
+}
+```
