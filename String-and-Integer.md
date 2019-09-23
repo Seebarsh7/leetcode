@@ -340,7 +340,26 @@ for(int i = 0; i <= nums.length; i++){
 * 所以重点就在于建立一个双向的map！！但又不能是一个一对一的关系，因为可能会产生多对一。。。
 * 所以我submit了四次。。。全部fail，看看别人怎么做的吧： 用一个256的int数组，instead of map
      * if use HashMap, use containsValue: 
-     ```
+```
      The java.util.HashMap.containsValue() method is used to check whether a particular value is being mapped by a single or more than one key in the HashMap.
 ```
-     
+
+# 246. Strobogrammatic Number
+* 5 condition (0,0) (1,1) (6,9), (9,6), (8,8), using hashmap or condition case
+* using two pointers!!!!
+    
+下面是Stfan大佬的解法，我怀疑我的智商
+```Java
+for(int i = 0; j = num.length() -1; i <= j; i++, j--){
+     if(!"00 88 11 696".contains(num.charAt(i) + "" + num.charAt(j))) return false;
+}
+return true;
+```
+真是打扰了。。。     
+
+# 247. Strobogrammatic Number II    
+* 找出某个长度的所有这种数，返回一个字符串array
+* 来吧让我们，recursion
+```Java
+
+```
