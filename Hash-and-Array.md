@@ -447,3 +447,6 @@ public List<Integer> spiralOrder(int[][] matrix) {
     
 }
 ```
+# 299. Bulls and Cows
+* 这道题一直特别卡我...
+* 吃完饭不想写了
