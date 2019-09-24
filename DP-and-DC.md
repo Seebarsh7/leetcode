@@ -810,3 +810,52 @@ public int maximalSquare(char[][] matrix) {
      return max*max;
 }
 ```
+# 253. Meeting Rooms II
+* 很难得碰到一道greedy，结果我都不会了
+* 经典meeting room题
+* 看到一个过于牛逼的解法：
+    * facts: the event is sorted by its start time
+    * facts: when a event is started while the previous events are not ended (for this particular event, I just need to evacuate 1 room), then I will need a new room to put the current meeting there.
+    * when the previous event ends, then I could move the pointer to the next event end time, and waiting for the new meetings coming.
+```Java
+// O(n)
+public int minMeetingRooms(int[][] intervals){
+    int[] start = new int[intervals.length]
+    int[] end = new int[intervals.length]
+    for(int i = 0; i< intervals.length; i++){
+        start[i] = intervals[i][0];
+        end[i] = intervals[i][1];
+    }
+    Array.sort(start);
+    Array.sort(end);
+    
+    int room = 0;
+    int endItr = 0;
+    for(int i = 0; i < intervals.length; i++){
+        if(start[i] < endItr){
+            room++;
+        }else{
+            endItr++;
+        }
+    }
+    return room;
+}
+```
+其实就是看在这个meeting来的时候有没有room清空了
+* 另外一个想法用heap做也着实很牛逼
+* heap用来储存room，然后每次pop结束最早的room
+* 如果room在下一个start来之前已经结束了，那么不需要allocate新room，只需要把这个room的endtime延长为现在这个的end
+* 如果room没结束，那么min-heap里放进去新room，占用时间与当前这个meeting（interval）相同
+```Java
+
+```
+# 252. Meeting Rooms (Easy)
+* 我终于拥有了第一个AC...很简单，就是要写一个新的comparator来sort
+```Java
+Arrays.sort(intervals, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b) { 
+                return a[0] - b[0]; 
+            }
+        });
+```
+* 用上题第一个解法也能解
