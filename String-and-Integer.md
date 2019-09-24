@@ -363,3 +363,17 @@ return true;
 ```Java
 
 ```
+# 271. Encode and Decode Strings
+题目描述很好品：Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
+* 高票几个回答又是大佬，其实encoder就是要想个办法formatting string
+* 第一个回答用stringbuilder，/+一个num来分割字符
+     * 漂亮的function， ```int slash = s.indexOf('/', i);```, s.indexOf returns the first occurance of '/' starting from index i.
+* 第二个回答用stringsbuffer，用“ # ”来分割字符
+     * s.replace("#", "##").append(" # ")： encoder的时候把所有string里面的#double一下子
+     * s.split(" # ", -1); -1表示接受任何长度的字符串
+     * Decoder的时候把##替换成#
+     ```String[] array = s.split(" # ", -1);
+          for (int i=0; i<array.length-1; ++i)
+          strs.add(array[i].replace("##", "#"));
+     ```
+* 
