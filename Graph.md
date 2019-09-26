@@ -372,4 +372,22 @@ public int countNodes(TreeNode root) {
 }
 
 ```
+# 218 The Skyline Problem (Hard) - Segment Tree
+```Java
+void ConstructTree(int input[], int segTree[], int low, int high, int pos){
+    if(low == high){
+        segTree[pos] = input[low];
+        return;
+    }
+    int mid = (low+high)/2;
+    constructTree(input[], segTree[], low, mid, 2*pos+1);
+    constructTree(input[], segTree[], mid, high, 2*pos+2);
+    segTree[pos] = Math.min(segTree[2*pos+1], segTree[2*pos+2]);
+}
+```
+解法有priority queue和tree map, 都是以前没用过的数据结构
+# 315. Count of Smaller Numbers After Self
+似乎是一道谷歌真题
+```Java
 
+```
