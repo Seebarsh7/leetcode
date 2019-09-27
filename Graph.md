@@ -386,8 +386,133 @@ void ConstructTree(int input[], int segTree[], int low, int high, int pos){
 }
 ```
 解法有priority queue和tree map, 都是以前没用过的数据结构
-# 315. Count of Smaller Numbers After Self
-似乎是一道谷歌真题
+* priority queue
 ```Java
+public List<int[]> getSkyline(int[][] buildings) {
+    List<int[]> res = new ArrayList<>();
+    List<int[]> height = new ArrayList<>();
+    for(int[] b: buildings){
+        height.add(new int[]{b[0], -b[1]}); // put the start point into the height array, indicating by negative height
+        height.add(new int[]{b[1], b[2]}); //put the end point into the height array, indicating by positive height
+    }
+    Collections.sort(height, (a,b)->(a[0] == b[0]?a[1]-b[1]:a[0]-b[0])); //define a comparator that's gonna be used in PQ
+    PriorityQueue<Inetegr, Integer> pq = New PriorityQueue<>((a, b) -> (b - a));//sort in descending order
+    po.offer(0); //dummy root 0
+    int prev = 0;
+    
+    for(int[] h: height){
+        if(h[1] < 0){
+            pq.offer(-h[1]); //if h[1]<0, indicating that this is the start point of the pq
+        }
+        else{
+            pq.remove(h[1]); //else, this is the end point and would remove from the pq      
+        }
+        int cur = pq.peek();
+        if(cur > prev){
+            res.add(new int[]{h[0], curMax}); //why h[0]? it means adding the point changes the previous max
+            //so this would be the max: a critical point
+            prev = cur;
+        }
+    }
+    return res;
+}
 
 ```
+* TreeMap
+    * the difference is the removal, and tree cannot contain any duplicate keys.
+```Java
+public List<int[]> getSkyline(int[][] buildings) {
+    List<int[]> res = new ArrayList<>();
+    List<int[]> height = new ArrayList<>();
+    for(int[] b: buildings){
+        height.add(new int[]{b[0], -b[1]}); // put the start point into the height array, indicating by negative height
+        height.add(new int[]{b[1], b[2]}); //put the end point into the height array, indicating by positive height
+    }
+    Collections.sort(height, (a,b)->(a[0] == b[0]?a[1]-b[1]:a[0]-b[0])); //define a comparator that's gonna be used in PQ
+    TreeMap<Integer, Integer> map = new TreeMap<>(Collections.reverseOrder());
+    int prev = 0;
+    map.put(0,1); //dummy node
+    for(int[] h: height){
+        if(h[1] < 0){
+            Integer count = map.get(-h[1]); //this is for duplicate keys
+            count = count==null? 1: count+1;
+            map.put(-h[1], count);
+        }
+        else{
+            Integer count = map.get(h[1]); 
+            if(count == 1){ //can safely remove from the Tree
+                map.remove(h[1]);
+            }else{
+                map.put(h[1], count-1);
+            } 
+        }
+        int cur = map.firstKey(); //the max
+        if(cur > prev){
+            res.add(new int[]{h[0], cur});
+            prev = cur;
+        }
+    }
+    return res;
+}
+```
+# 315. Count of Smaller Numbers After Self
+似乎是一道谷歌真题
+* 复习一下merge sort
+```Java
+void merge(int arr[], int l, int m, int r) 
+{ 
+    int i, j, k; 
+    int n1 = m - l + 1; 
+    int n2 =  r - m; 
+    
+    //create new list to store left and right 
+    int left[n1], right[n2];
+    //copy array to temp list
+    for(int i = 0; i < n1; i++){
+        left[i] = arr[i];
+    }
+    for(int i = 0; i< n2; i++){
+        right[i] = arr[i+m+1];
+    }
+    
+   //compare and merge back to arr
+    i = 0; j = 0; k = 0;
+    while(i < n1 && j < n2){
+        if(left[i] < right[j]){
+            arr[k] = left[i];
+            i++;
+        }else{
+            arr[k] = right[j];
+            j++
+        }
+        k++
+    }
+    //the leftover of left/right, only one case would happen
+    while(i < n1){
+        arr[k] = left[i];
+        i++;
+        k++;
+    }
+    while(j < n2){
+        arr[k] = right[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int l, int r) { 
+    if (l < r) {
+        int m = (l+r)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+        merge(arr, l, m, r);
+    }
+    return arr;
+}
+```
+* 本题其实一样，只不过要keep一个index数组一个count数组，解法特别机智！规则：
+    * While doing the merge part, say that we are merging left[] and right[], left[] and right[] are already sorted.
+    * We keep a rightcount to record how many numbers from right[] we have added and keep an array count[] to record the result.
+    * When we move a number from right[] into the new sorted array, we increase rightcount by 1.
+    * When we move a number from left[] into the new sorted array, we increase count\[ index of the number \] by rightcount.
+  
