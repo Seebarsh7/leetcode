@@ -97,3 +97,32 @@ public int search(int[] nums, int target) {
         return -1;
     }
 ```
+
+# Quick Sort
+* choose pivot is arbitrary
+```Java
+int partition(int arr[], int low, int high) {
+        int pivot = arr[high];
+        int i = low;
+        //swap smaller numbers to the header of array
+        for(int j = low; j < high; j++){
+                if(arr[j] < pivot){
+                        int temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
+                        i++;
+                }
+        }
+        //no swap indicating remaining are larger than pivots, move pivots to the current position pointed by i
+        arr[high] = arr[i];
+        arr[i] = pivot;
+        
+        return i;
+} 
+
+void sort(int arr[], int low, int high) {
+        int pos = partition(arr, low, high);
+        sort(arr, low, pos-1); //lower part, pos does not change
+        sort(arr, pos+1, high); //higher part
+} 
+```
